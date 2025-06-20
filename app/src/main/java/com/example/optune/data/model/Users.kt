@@ -10,6 +10,9 @@ object Users : Table() {
     val education = varchar("education", 255).nullable()
     val cv = text("cv").nullable()
 
+    val skills = text("skills").nullable()
+    val interests = text("interests").nullable()
+
     override val primaryKey = PrimaryKey(userId)
 
 }

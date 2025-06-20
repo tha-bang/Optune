@@ -3,10 +3,11 @@ package com.example.optune.dao
 import com.example.optune.data.model.Users
 import com.example.optune.database.DatabaseFactory.dbQuery
 import com.example.optune.data.model.User
+import com.example.optune.utils.*
 import org.jetbrains.exposed.sql.*
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 
 class UserDao {
+
     suspend fun getAll(): List<User> = dbQuery {
         Users.selectAll().map {
             User(
@@ -15,22 +16,27 @@ class UserDao {
                 email = it[Users.email],
                 signUpMethod = it[Users.signUpMethod],
                 education = it[Users.education],
-                cv = it[Users.cv]
-                // skills and interests not handled yet
+                cv = it[Users.cv],
+                skills = it[Users.skills]?.let { json -> jsonToList(json) } ?: emptyList(),
+                interests = it[Users.interests]?.let { json -> jsonToList(json) } ?: emptyList()
             )
         }
     }
 
     suspend fun insert(user: User): User = dbQuery {
+        val idToUse = user.userId ?: java.util.UUID.randomUUID().toString()
+
         Users.insert {
-            it[userId] = user.userId ?: java.util.UUID.randomUUID().toString()
-            it[name] = user.name
-            it[email] = user.email
-            it[signUpMethod] = user.signUpMethod
-            it[education] = user.education
-            it[cv] = user.cv
+            it[Users.userId] = idToUse
+            it[Users.name] = user.name
+            it[Users.email] = user.email
+            it[Users.signUpMethod] = user.signUpMethod
+            it[Users.education] = user.education
+            it[Users.cv] = user.cv
+            it[Users.skills] = user.skills.takeIf { it.isNotEmpty() }?.let { listToJson(it) }
+            it[Users.interests] = user.interests.takeIf { it.isNotEmpty() }?.let { listToJson(it) }
         }
 
-        user.copy(userId = user.userId ?: "generated") // return updated User object
+        user.copy(userId = idToUse)
     }
 }
