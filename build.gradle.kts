@@ -13,7 +13,7 @@ buildscript {
     }
 }
 
-allprojects { // Optional: For repositories common to all modules
+allprojects {
     repositories {
     }
 }

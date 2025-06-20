@@ -55,7 +55,7 @@ fun EducationPage(
 
         // Background Image
         Image(
-            painter = painterResource(id = R.drawable.w21), // replace with your image resource
+            painter = painterResource(id = R.drawable.w21),
             contentDescription = "Background Image",
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop

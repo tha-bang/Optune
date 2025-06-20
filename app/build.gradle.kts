@@ -41,6 +41,8 @@ android {
         compose = true
     }
 }
+val postgresql_driver_version = "42.7.3" // Example version, use the latest stable version
+val exposed_version = "0.41.1"
 
 dependencies {
     implementation(libs.androidx.core.ktx)
@@ -89,5 +91,9 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:4.9.1")
     implementation("androidx.compose.material:material-icons-extended:1.7.8")
     implementation ("androidx.compose.material3:material3:1.3.2")
+    implementation("org.postgresql:postgresql:$postgresql_driver_version")
+    implementation("org.jetbrains.exposed:exposed-core:$exposed_version")
+    implementation("org.jetbrains.exposed:exposed-dao:$exposed_version")
+    implementation("org.jetbrains.exposed:exposed-jdbc:$exposed_version")
 
 }

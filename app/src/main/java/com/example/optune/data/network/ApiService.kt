@@ -13,9 +13,7 @@ interface ApiService {
 
     @GET("api/users/{userId}")
     suspend fun getUser(@Path("userId") userId: String): Response<User>
-    //Add other request here
-}
-/*interface ApiService {
+
     @GET("/users")
     suspend fun getUsers(): List<User>
-}*/
+}

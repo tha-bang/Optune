@@ -10,7 +10,7 @@ import kotlin.math.min
 fun DashBoard(
     navController: NavController,
 ) {
-    val userData = UserData() //Added dummy userdata
+    val userData = UserData()
     ProfileDashboardScreen(
         navController = navController,
         userData = UserData(
