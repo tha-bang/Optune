@@ -50,6 +50,7 @@ import com.example.optune.ui.screens.SkillsAndInterestsScreen
 import com.example.optune.ui.screens.StudentSignUpScreen
 import com.example.optune.ui.screens.UnemployedSignUpScreen
 import com.example.optune.ui.theme.OptuneTheme
+import com.example.optune.viewmodel.OfferViewModel
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
@@ -120,8 +121,12 @@ class MainActivity : ComponentActivity() {
                         composable("noEducation") {
                             NoEducationPageForm(navController = navController)
                         }
-                        composable("dashboardscreen") {
-                            DashboardScreen(navController)
+                        composable("dashboardscreen/{role}",
+                            arguments = listOf(navArgument("role") { type = NavType.StringType })
+                        ) { backStackEntry ->
+                            val role = backStackEntry.arguments?.getString("role") ?: "unknown"
+                            val viewModel = remember { OfferViewModel() }
+                            DashboardScreen(navController, role, viewModel)
                         }
                     }
                 }
