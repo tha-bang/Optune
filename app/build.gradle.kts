@@ -44,6 +44,7 @@ android {
 }
 val postgresql_driver_version = "42.7.3" // Example version, use the latest stable version
 val exposed_version = "0.41.1"
+val ktor_version = "2.3.11"
 
 dependencies {
     implementation(libs.androidx.core.ktx)
@@ -98,4 +99,27 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposed_version")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
 
+    // Ktor Server Core
+    implementation("io.ktor:ktor-server-core-jvm:$ktor_version")
+
+    // Pick an engine (Netty is common for production, CIO is good for development/simplicity)
+    implementation("io.ktor:ktor-server-netty-jvm:$ktor_version")
+    // OR
+    // implementation("io.ktor:ktor-server-cio-jvm:$ktor_version")
+
+    // For routing (already part of ktor-server-core, but good to be aware)
+    // No separate dependency needed for routing itself if you have ktor-server-core
+
+    // If you plan to use Ktor for content negotiation (JSON, XML, etc.)
+    implementation("io.ktor:ktor-server-content-negotiation-jvm:$ktor_version")
+    implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:$ktor_version") // For kotlinx.serialization
+
+    // If you need logging
+    implementation("ch.qos.logback:logback-classic:1.5.6") // Or your preferred logging backend
+
+
+    implementation(libs.ktor.server.core)
+    implementation(libs.ktor.server.netty) // Or libs.ktor.server.cio
+    implementation(libs.ktor.server.content.negotiation)
+    implementation(libs.ktor.serialization.kotlinx.json)
 }

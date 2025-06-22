@@ -43,7 +43,7 @@ import com.example.optune.education.HighSchoolPageForm
 import com.example.optune.education.NoEducationPageForm
 import com.example.optune.education.TertiaryPageForm
 import com.example.optune.ui.screens.BusinessSignUpScreen
-import com.example.optune.ui.screens.DashBoard
+import com.example.optune.ui.screens.DashboardScreen
 import com.example.optune.ui.screens.SignInScreen
 import com.example.optune.ui.screens.SignUpFormScreen
 import com.example.optune.ui.screens.SkillsAndInterestsScreen
@@ -120,8 +120,8 @@ class MainActivity : ComponentActivity() {
                         composable("noEducation") {
                             NoEducationPageForm(navController = navController)
                         }
-                        composable("dashboard") {
-                            DashBoard(navController)
+                        composable("dashboardscreen") {
+                            DashBoardScreen(navController)
                         }
                     }
                 }
