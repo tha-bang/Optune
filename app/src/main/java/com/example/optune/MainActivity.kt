@@ -121,7 +121,7 @@ class MainActivity : ComponentActivity() {
                             NoEducationPageForm(navController = navController)
                         }
                         composable("dashboardscreen") {
-                            DashBoardScreen(navController)
+                            DashboardScreen(navController)
                         }
                     }
                 }
