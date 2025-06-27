@@ -32,6 +32,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -62,17 +63,18 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         FirebaseApp.initializeApp(this)
         enableEdgeToEdge()
+
         setContent {
             OptuneTheme {
                 val navController = rememberNavController()
                 val context = LocalContext.current
+                val viewModel: OfferViewModel = hiltViewModel()
 
-                // Callback function to show a toast
                 val showToast: (String) -> Unit = { message ->
                     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
                 }
 
-                Scaffold() { innerPadding ->
+                Scaffold { innerPadding ->
                     NavHost(
                         navController = navController,
                         startDestination = "home",
@@ -82,51 +84,49 @@ class MainActivity : ComponentActivity() {
                             HomePage(navController, showToast)
                         }
                         composable("signIn") {
-
                             SignInScreen(navController)
+                        }
+                        composable("signUp") {
+                            SignUpFormScreen(navController)
+                        }
+                        composable("studentSignUp") {
+                            StudentSignUpScreen(navController)
+                        }
+                        composable("unemployedSignUp") {
+                            UnemployedSignUpScreen(navController)
+                        }
+                        composable("businessSignUp") {
+                            BusinessSignUpScreen(navController)
+                        }
+                        composable("skillsAndInterests") {
+                            SkillsAndInterestsScreen(navController)
+                        }
+                        composable("education") {
+                            EducationPage(navController)
+                        }
+                        composable("highSchool") {
+                            HighSchoolPageForm(navController)
+                        }
+                        composable("tertiary") {
+                            TertiaryPageForm(navController)
+                        }
+                        composable("noEducation") {
+                            NoEducationPageForm(navController)
+                        }
+                        composable(
+                            "dashboardscreen/{role}",
+                            arguments = listOf(navArgument("role") { type = NavType.StringType })
+                        ) { backStackEntry ->
+                            val role = backStackEntry.arguments?.getString("role") ?: "unknown"
+                            val viewModel: OfferViewModel = hiltViewModel()
+                            DashboardScreen(navController, role, viewModel)
                         }
                         composable(
                             "signInSuccess/{role}",
                             arguments = listOf(navArgument("role") { type = NavType.StringType })
                         ) { backStackEntry ->
-                            val role = backStackEntry.arguments?.getString("role") ?: "Unknown"
-
-                        }
-                        composable("signUp") {
-                            SignUpFormScreen(navController = navController)
-                        }
-                        composable("studentSignUp") {
-                            StudentSignUpScreen(navController = navController)
-                        }
-                        composable("unemployedSignUp") {
-                            UnemployedSignUpScreen(navController = navController)
-                        }
-                        composable("businessSignUp") {
-                            BusinessSignUpScreen(navController = navController)
-                        }
-                        composable("skillsAndInterests") {
-                                SkillsAndInterestsScreen(
-                                    navController = navController
-                                )
-                        }
-                        composable("education") {
-                            EducationPage(navController = navController)
-                        }
-                        composable("highSchool") {
-                            HighSchoolPageForm(navController = navController)
-                        }
-                        composable("tertiary") {
-                            TertiaryPageForm(navController = navController)
-                        }
-                        composable("noEducation") {
-                            NoEducationPageForm(navController = navController)
-                        }
-                        composable("dashboardscreen/{role}",
-                            arguments = listOf(navArgument("role") { type = NavType.StringType })
-                        ) { backStackEntry ->
                             val role = backStackEntry.arguments?.getString("role") ?: "unknown"
-                            val viewModel = remember { OfferViewModel() }
-                            DashboardScreen(navController, role, viewModel)
+                            navController.navigate("dashboardscreen/$role")
                         }
                     }
                 }
@@ -134,13 +134,14 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomePage(navController: NavHostController, showToast: (String) -> Unit) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { },
+                title = {},
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = Color.Black
                 )
@@ -150,7 +151,7 @@ fun HomePage(navController: NavHostController, showToast: (String) -> Unit) {
     ) { innerPadding ->
         Box(modifier = Modifier.fillMaxSize()) {
             Image(
-                painter = painterResource(id = R.drawable.w21), // Use your background image
+                painter = painterResource(id = R.drawable.w21),
                 contentDescription = "Background Image",
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
@@ -200,16 +201,13 @@ fun HomePage(navController: NavHostController, showToast: (String) -> Unit) {
 @Composable
 fun HomePagePreview() {
     OptuneTheme {
-        // Mock implementation of showToast for preview
         val previewShowToast: (String) -> Unit = { message ->
-            // In the preview, we can just print the message to the console
-            println("Toast message in preview: $message")
+            println("Toast in preview: $message")
         }
         HomePage(rememberNavController(), previewShowToast)
     }
 }
 
 fun getCurrentUserId(): String? {
-    val firebaseUser = FirebaseAuth.getInstance().currentUser
-    return firebaseUser?.uid
+    return FirebaseAuth.getInstance().currentUser?.uid
 }

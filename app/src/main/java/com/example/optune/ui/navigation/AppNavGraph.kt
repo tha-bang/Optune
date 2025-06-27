@@ -13,45 +13,55 @@ import com.example.optune.ui.screens.DashboardScreen
 import com.example.optune.ui.screens.SignInScreen
 import com.example.optune.ui.screens.SignUpFormScreen
 import com.example.optune.ui.screens.SkillsAndInterestsScreen
-
+import com.example.optune.viewmodel.OfferViewModel
 
 @Composable
 fun AppNavGraph(
-    showToast: (String) -> Unit
+    showToast: (String) -> Unit,
+    offerViewModel: OfferViewModel,
+    userRole: String = "unemployed", // Default role; replace with real user data
+    isSignedIn: Boolean = false
 ) {
     val navController = rememberNavController()
 
-    val isSignedIn = false
-
     NavHost(
         navController = navController,
-        startDestination = if (isSignedIn) "dashboard" else "signIn"
+        startDestination = if (isSignedIn) Route.DASHBOARD else Route.SIGN_IN
     ) {
-        composable("signIn") {
+        // Auth Screens
+        composable(Route.SIGN_IN) {
             SignInScreen(navController = navController)
         }
-        composable("signUp") {
+        composable(Route.SIGN_UP) {
             SignUpFormScreen(navController = navController)
         }
-        composable("dashboard") {
-            DashboardScreen(navController = navController)
+
+        // Dashboard
+        composable(Route.DASHBOARD) {
+            DashboardScreen(
+                navController = navController,
+                role = userRole,
+                viewModel = offerViewModel
+            )
         }
-        composable("skillsAndInterests"){
+
+        // Onboarding / Setup
+        composable(Route.SKILLS_AND_INTERESTS) {
             SkillsAndInterestsScreen(navController = navController)
         }
-        composable("education"){
+        composable(Route.EDUCATION) {
             EducationPage(navController = navController)
         }
-        composable("highSchool"){
+        composable(Route.HIGH_SCHOOL) {
             HighSchoolPageForm(navController = navController)
         }
-        composable("tertiary"){
+        composable(Route.TERTIARY) {
             TertiaryPageForm(navController = navController)
         }
-        composable("noEducation"){
+        composable(Route.NO_EDUCATION) {
             NoEducationPageForm(navController = navController)
         }
-        composable("highSchoolAndTertiary") {
+        composable(Route.HIGH_SCHOOL_AND_TERTIARY) {
             HighSchoolAndTertiaryPageForm(navController = navController)
         }
     }
